@@ -1,0 +1,12 @@
+<div>
+    <h1>{{ post.title }}</h1>
+    <p>{{ post.content }}</p>
+</div>
+
+<p>
+    <a href="{% url 'posts:edit' post.id %}">Edit</a>
+</p>
+
+<p>
+    <a href="{% url 'posts:index' %}">Back to index page</a>
+</p>

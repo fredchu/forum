@@ -9,6 +9,9 @@ urlpatterns = patterns('',
     # url(r'^$', 'forum.views.home', name='home'),
     # url(r'^forum/', include('forum.foo.urls')),
 
+    url(r'^posts/', include('posts.urls', namespace='posts')),
+    # url(r'^comments/', include('comments.urls'), namespace = 'comments'),
+
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 

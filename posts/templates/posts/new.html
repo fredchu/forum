@@ -1,0 +1,12 @@
+<h1>New Page</h1>
+
+<form action="{% url 'posts:create' %}" method="post">
+    {% csrf_token %}
+
+    <input type="text" name="title"/>
+    <br/>
+    <textarea name="content"></textarea>
+    <br/>
+
+    <input type="submit" value="Publish">
+</form>

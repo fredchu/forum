@@ -1,0 +1,17 @@
+<h1>Edit This Post</h1>
+
+<form action="{% url 'posts:update' post.id %}" method="post">
+    {% csrf_token %}
+
+    <input name="title" type="text" value="{{ post.title }}">
+    <br>
+    <textarea name="content">{{ post.content }}</textarea>
+    <br>
+    <input type="submit" value="Update">
+    <a href="{% url 'posts:show' post.id %}">Cancel</a>
+</form>
+
+<form action="{% url 'posts:destroy' post.id %}" method="post">
+    {% csrf_token %}
+    <input type="submit" value="Delete">
+</form>

@@ -1,0 +1,21 @@
+{% load staticfiles %}
+
+<link rel="stylesheet" href="{% static 'posts/style.css' %}">
+
+{% if posts %}
+<div>
+    {% for post in posts %}
+    <p>
+        <a href="{% url 'posts:show' post.id %}">{{ post.title }}</a>
+    </p>
+    {% endfor %}
+</div>
+{% else %}
+<div>
+    <p>Currently no posts, post one!</p>
+</div>
+{% endif %}
+
+<div>
+    <a href="{% url 'posts:create_page' %}">New Post</a>
+</div>

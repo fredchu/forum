@@ -3,14 +3,22 @@ from django.template import RequestContext, loader
 from django.shortcuts import render, get_object_or_404
 from django.core.urlresolvers import reverse
 import datetime
+from django import forms
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from posts.models import Post
 # from comments.models import Comment
 
 def index(request):
-    posts = Post.objects.all()
+    return index_pages(request, 1)
 
-    print posts
+def index_pages(request, page):
+    postsPaginator = Paginator(Post.objects.all(), 4, orphans=2)
+
+    try:
+        posts = postsPaginator.page(page)
+    except (PageNotAnInteger, EmptyPage):
+        posts = postsPaginator.page(1)
 
     return render(request, 'posts/index.html', {
         'posts': posts
@@ -18,9 +26,11 @@ def index(request):
 
 def show(request, post_id):
     post = get_object_or_404(Post, pk=post_id)
+    comments = enumerate( post.comment_set.all())
 
     return render(request, 'posts/show.html', {
-        'post': post
+        'post': post,
+        'comments': comments
     })
 
 def create_page(request):
@@ -28,8 +38,30 @@ def create_page(request):
     # return HttpResponse('haha create_page page')
 
 def create(request):
-    title = request.POST[ 'title' ]
-    content = request.POST[ 'content' ]
+    title = request.POST['title']
+    content = request.POST['content']
+
+    titleForm = forms.CharField(
+        error_messages={
+            'required': 'Please enter your title'
+        })
+
+    contentForm = forms.CharField(
+        error_messages={
+            'required': 'Please enter your content'
+        })
+
+    try:
+        print titleForm.clean(title)
+    except ValidationError:
+        print 'Title is required......write some!'
+        print ValidationError
+
+    try:
+        print contentForm.clean(content)
+    except ValidationError:
+        print 'Content is required......write some!'
+        print ValidationError
 
     post = Post(
         title=title,

@@ -16,6 +16,18 @@
 </div>
 {% endif %}
 
+<div class="paginator">
+    {% if posts.has_previous %}
+    <a href="/posts/pages/{{ posts.previous_page_number }}">Prev</a>
+    {% endif %}
+
+    <span>Page {{ posts.number }} of {{ posts.paginator.num_pages }}</span>
+
+    {% if posts.has_next %}
+    <a href="/posts/pages/{{ posts.next_page_number }}">Next</a>
+    {% endif %}
+</div>
+
 <div>
     <a href="{% url 'posts:create_page' %}">New Post</a>
 </div>

@@ -10,3 +10,21 @@
 <p>
     <a href="{% url 'posts:index' %}">Back to index page</a>
 </p>
+
+<h2>Comments</h2>
+<div id="comments">
+    {% for index, comment in comments %}
+    <div>comment #{{ index }}</div>
+    <div>{{ comment.content }}</div>
+    <form action="/posts/{{ post.id }}/comments/{{ comment.id }}/destroy" method="post">
+        {% csrf_token %}
+        <input type="submit" value="Delete comment">
+    </form>
+    {% endfor %}
+</div>
+
+<form action="{% url 'posts:show' post.id %}comments/create" method="POST">
+    {% csrf_token %}
+    <textarea name="content" cols="30" rows="10" placeholder="Leave your comments here"></textarea>
+    <input type="submit" value="Post comment">
+</form>

@@ -9,6 +9,7 @@ urlpatterns = patterns('',
     # url(r'^$', 'forum.views.home', name='home'),
     # url(r'^forum/', include('forum.foo.urls')),
 
+    url(r'^$', 'posts.views.index', name='home'),
     url(r'^posts/', include('posts.urls', namespace='posts')),
     # url(r'^comments/', include('comments.urls'), namespace = 'comments'),
 

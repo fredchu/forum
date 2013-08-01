@@ -28,3 +28,6 @@
     <textarea name="content" cols="30" rows="10" placeholder="Leave your comments here"></textarea>
     <input type="submit" value="Post comment">
 </form>
+{% if err.content %}
+<p class="error">{{ err.content.0 }}</p>
+{% endif %}

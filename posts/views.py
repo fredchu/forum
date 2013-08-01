@@ -84,14 +84,14 @@ def update(request, post_id):
 
     try:
         post.full_clean()
-    except ValidationError as e:
+    except ValidationError as err:
         return render(request, 'posts/edit.html', {
             'ori': {
                 'title': post.title,
                 'content': post.content
             },
             'post': post,
-            'err': e.message_dict
+            'err': err.message_dict
         })
 
     post.save()

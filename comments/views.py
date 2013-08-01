@@ -1,5 +1,6 @@
 from django.http import HttpResponseRedirect, HttpResponse, Http404
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, render
+from django.core.exceptions import ValidationError
 from posts.models import Post
 import datetime
 
@@ -11,6 +12,17 @@ def create(request, post_id):
     content = request.POST['content']
 
     comment = Comment(content=content, post=post)
+
+    try:
+        comment.full_clean()
+    except ValidationError as err:
+        comments = enumerate( post.comment_set.all())
+
+        return render(request, 'posts/show.html', {
+            'post': post,
+            'comments': comments,
+            'err': err.message_dict
+        })
 
     comment.save()
 

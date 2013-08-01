@@ -1,11 +1,33 @@
+{% load staticfiles %}
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+</head>
 <h1>New Page</h1>
 
 <form action="{% url 'posts:create' %}" method="post">
     {% csrf_token %}
 
+    {% if ori.title %}
+    <input type="text" name="title" value="{{ ori.title }}"/>
+    {% else %}
     <input type="text" name="title"/>
+    {% endif %}
+
+    {% if err.title %}
+    <p class="error">{{ err.title.0 }}</p>
+    {% endif %}
+
     <br/>
+
+    {% if ori.content %}
+    <textarea name="content">{{ ori.content }}</textarea>
+    {% else %}
     <textarea name="content"></textarea>
+    {% endif %}
+
+    {% if err.content %}
+    <p class="error">{{ err.content.0 }}</p>
+    {% endif %}
     <br/>
 
     <input type="submit" value="Publish">

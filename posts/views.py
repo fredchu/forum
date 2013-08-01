@@ -1,13 +1,15 @@
+# -*- coding: utf-8 -*-
+
 from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.template import RequestContext, loader
 from django.shortcuts import render, get_object_or_404
 from django.core.urlresolvers import reverse
+from django.core.exceptions import ValidationError
 import datetime
 from django import forms
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from posts.models import Post
-# from comments.models import Comment
 
 def index(request):
     return index_pages(request, 1)
@@ -35,39 +37,26 @@ def show(request, post_id):
 
 def create_page(request):
     return render(request, 'posts/new.html', {})
-    # return HttpResponse('haha create_page page')
 
 def create(request):
-    title = request.POST['title']
-    content = request.POST['content']
-
-    titleForm = forms.CharField(
-        error_messages={
-            'required': 'Please enter your title'
-        })
-
-    contentForm = forms.CharField(
-        error_messages={
-            'required': 'Please enter your content'
-        })
-
-    try:
-        print titleForm.clean(title)
-    except ValidationError:
-        print 'Title is required......write some!'
-        print ValidationError
-
-    try:
-        print contentForm.clean(content)
-    except ValidationError:
-        print 'Content is required......write some!'
-        print ValidationError
+    title = request.POST['title'].strip()
+    content = request.POST['content'].strip()
 
     post = Post(
         title=title,
-        content=content,
-        pub_date=datetime.datetime.now()
+        content=content
     )
+
+    try:
+        post.full_clean()
+    except ValidationError as err:
+        return render(request, 'posts/new.html', {
+            'ori': {
+                'title': title,
+                'content': content
+            },
+            'err': err.message_dict
+        })
 
     post.save()
 
@@ -85,9 +74,25 @@ def update(request, post_id):
 
     if request.POST[ 'title' ]:
         post.title = request.POST[ 'title' ]
+    elif len( request.POST[ 'title' ]) == 0:
+        post.title = ''
 
     if request.POST[ 'content' ]:
         post.content = request.POST[ 'content' ]
+    elif len( request.POST[ 'content' ]) == 0:
+        post.content = ''
+
+    try:
+        post.full_clean()
+    except ValidationError as e:
+        return render(request, 'posts/edit.html', {
+            'ori': {
+                'title': post.title,
+                'content': post.content
+            },
+            'post': post,
+            'err': e.message_dict
+        })
 
     post.save()
 
